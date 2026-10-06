@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: cybersentinel-postgres
+    environment:
+      POSTGRES_DB: cybersentinel
+      POSTGRES_USER: cybersentinel
+      POSTGRES_PASSWORD: cybersentinel
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cybersentinel -d cybersentinel"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: cybersentinel-app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg2://cybersentinel:cybersentinel@postgres:5432/cybersentinel
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

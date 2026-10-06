@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CyberSentinel</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+<body>
+
+    <main class="container">
+
+        <header class="dashboard-header">
+            <div>
+                <h1>CyberSentinel</h1>
+
+                <p class="subtitle">
+                    Web application security analysis platform
+                </p>
+            </div>
+        </header>
+
+
+        <section class="scan-form">
+
+            <input
+                id="url-input"
+                type="url"
+                placeholder="https://example.com"
+                autocomplete="off"
+            >
+
+            <button id="scan-button">
+                Scan
+            </button>
+
+        </section>
+
+
+        <p id="status"></p>
+
+        <section class="assistant-section">
+            <div class="section-header">
+                <div>
+                    <h2>Security Assistant</h2>
+                    <p>
+                        Ask technical questions about the security findings detected by CyberSentinel.
+                    </p>
+                </div>
+            </div>
+        
+            <div class="assistant-card">
+                <div class="assistant-input-row">
+                    <textarea
+                        id="assistant-question"
+                        placeholder="Example: Why is HttpOnly important for session cookies?"
+                        rows="3"
+                    ></textarea>
+        
+                    <button
+                        id="assistant-button"
+                        type="button"
+                    >
+                        Ask Assistant
+                    </button>
+                </div>
+        
+                <div
+                    id="assistant-loading"
+                    class="assistant-loading hidden"
+                >
+                    Analyzing security context...
+                </div>
+        
+                <div
+                    id="assistant-error"
+                    class="assistant-error hidden"
+                ></div>
+        
+                <div
+                    id="assistant-result"
+                    class="assistant-result hidden"
+                >
+                    <div class="assistant-answer">
+                        <h3>Answer</h3>
+                        <p id="assistant-answer-text"></p>
+                    </div>
+        
+                    <div class="assistant-sources">
+                        <h3>Sources</h3>
+                        <div id="assistant-sources-list"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="history-section">
+
+            <div class="section-header">
+        
+                <div>
+                    <h2>Scan history</h2>
+        
+                    <p>
+                        Previously executed security scans.
+                    </p>
+                </div>
+        
+                <button
+                    id="refresh-history"
+                    class="secondary-button"
+                >
+                    Refresh
+                </button>
+        
+            </div>
+        
+            <div id="scan-history">
+                <p class="history-empty">
+                    No scans loaded.
+                </p>
+            </div>
+        
+        </section>
+
+        
+        <section
+            id="results"
+            class="hidden"
+        >
+
+            <section class="overview">
+
+                <div class="overall-risk-card">
+
+                    <span class="card-label">
+                        Overall Risk
+                    </span>
+
+                    <strong id="overall-risk-level">
+                        -
+                    </strong>
+
+                    <span id="overall-risk-score">
+                        Score: -
+                    </span>
+
+                </div>
+
+
+                <div class="metric-card">
+
+                    <span class="card-label">
+                        Total Findings
+                    </span>
+
+                    <strong id="total-findings">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="metric-card">
+
+                    <span class="card-label">
+                        HTTP Status
+                    </span>
+
+                    <strong id="status-code">
+                        -
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <section class="risk-summary">
+
+                <h2>Risk distribution</h2>
+
+
+                <div class="risk-grid">
+
+                    <div class="risk-card">
+                        <span>Critical</span>
+                        <strong id="critical-count">
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="risk-card">
+                        <span>Very High</span>
+                        <strong id="very-high-count">
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="risk-card">
+                        <span>High</span>
+                        <strong id="high-count">
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="risk-card">
+                        <span>Medium</span>
+                        <strong id="medium-count">
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="risk-card">
+                        <span>Low</span>
+                        <strong id="low-count">
+                            0
+                        </strong>
+                    </div>
+
+
+                    <div class="risk-card">
+                        <span>Very Low</span>
+                        <strong id="very-low-count">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section class="findings-section">
+
+                <h2>Findings</h2>
+
+                <div id="findings"></div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <script src="/static/app.js"></script>
+
+</body>
+</html>
