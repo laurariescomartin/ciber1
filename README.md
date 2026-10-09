@@ -1,20 +1,20 @@
 # CyberSentinel
 
-CyberSentinel is a defensive web security analysis platform built with Python and FastAPI for identifying common security weaknesses in authorized web applications.
+CyberSentinel is a defensive web security analysis platform built with Python and FastAPI to identify common security weaknesses in authorized web applications.
 
-The project combines automated security checks, explainable risk scoring, PostgreSQL persistence, a professional dashboard and a RAG-based Security Assistant.
+The platform combines automated security checks, explainable risk scoring, PostgreSQL persistence, an interactive dashboard, and a Retrieval-Augmented Generation (RAG) Security Assistant.
 
 ## Key Features
 
 - Automated analysis of web security configurations
 - Security header and cookie analysis
-- HTTPS and transport security checks
-- Detection of information disclosure
+- HTTPS usage and redirect checks
+- Server and technology information disclosure detection
 - Form security analysis
 - Explainable risk scoring based on likelihood and impact
 - PostgreSQL persistence for scans and findings
-- Interactive security dashboard
-- RAG-based Security Assistant using ChromaDB and OpenAI
+- Interactive security dashboard with scan history
+- RAG-based Security Assistant powered by ChromaDB and OpenAI
 - Docker support
 - Automated test suite
 
@@ -22,77 +22,80 @@ The project combines automated security checks, explainable risk scoring, Postgr
 
 CyberSentinel currently analyzes:
 
-- Content-Security-Policy
-- Strict-Transport-Security
-- X-Content-Type-Options
-- X-Frame-Options
-- Referrer-Policy
-- Cookie security attributes: Secure, HttpOnly and SameSite
-- HTTPS usage and redirects
-- Server and technology disclosure
-- Form submission over insecure HTTP
+- `Content-Security-Policy` (CSP)
+- `Strict-Transport-Security` (HSTS)
+- `X-Content-Type-Options`
+- `X-Frame-Options`
+- `Referrer-Policy`
+- Cookie security attributes: `Secure`, `HttpOnly`, and `SameSite`
+- HTTPS usage and redirect behavior
+- Server and technology information disclosure
+- Form submissions over insecure HTTP
 - External form destinations
 
-The platform performs defensive, non-exploitative analysis and does not attempt to compromise the target.
+The platform focuses on defensive, non-intrusive analysis. It does not attempt to exploit vulnerabilities or compromise target systems.
 
 ## Risk Model
 
-Each finding is evaluated using:
+Each finding is evaluated using likelihood and impact values.
 
 **Risk Score = Likelihood × Impact**
 
-Findings are then classified into:
+Findings are classified into six risk levels:
 
 `Very Low · Low · Medium · High · Very High · Critical`
 
-This provides an explainable way to prioritize security findings instead of simply reporting isolated configuration issues.
+This scoring model provides an explainable way to prioritize findings and remediation efforts. Risk scores are heuristic indicators and should be interpreted in the context of the application being assessed.
 
 ## Security Assistant
 
-CyberSentinel includes a Retrieval-Augmented Generation (RAG) assistant that provides security explanations based on the project's knowledge base.
+CyberSentinel includes a Retrieval-Augmented Generation (RAG) assistant that explains security findings using a dedicated security knowledge base.
 
-**Flow:**
+**Workflow:**
 
 `Finding → Retrieval → Security Context → LLM → Explanation`
 
 Technologies used:
 
-- ChromaDB for vector storage
-- OpenAI embeddings
-- LangChain
-- OpenAI LLM
-- Markdown-based security knowledge base
+- **ChromaDB** for vector storage
+- **OpenAI embeddings** for semantic retrieval
+- **LangChain** for LLM integration
+- **OpenAI** for generating explanations
+- **Markdown** for the security knowledge base
 
-The assistant is designed to explain findings, their security impact and recommended mitigations without inventing evidence that was not detected by the scanner.
+The assistant provides context about findings, their potential security impact, and recommended mitigations. Its explanations are advisory; the scanner's evidence remains the basis for each detected finding.
 
 ## Architecture
 
 ```text
 Web Dashboard
-      │
-      ▼
+      |
+      v
    FastAPI
-      │
-      ▼
+      |
+      v
  Security Engine
-      │
-      ├── Headers Scanner
-      ├── Cookies Scanner
-      ├── HTTPS Scanner
-      ├── Server Scanner
-      └── Forms Scanner
-      │
-      ▼
+      |
+      +-- Headers Scanner
+      +-- Cookies Scanner
+      +-- HTTPS Scanner
+      +-- Server Scanner
+      +-- Forms Scanner
+      |
+      v
  Risk Assessment
-      │
-      ▼
+      |
+      v
  PostgreSQL
-      │
-      └── Security Assistant
-              │
-              ├── ChromaDB
-              ├── Retrieval
-              └── LLM
+      |
+      +-- Scan History
+      +-- Findings
+
+Security Assistant
+      |
+      +-- Security Knowledge Base
+      +-- ChromaDB Retrieval
+      +-- OpenAI LLM
 ```
 
 ## Tech Stack
@@ -103,13 +106,14 @@ Web Dashboard
 - FastAPI
 - Pydantic
 - SQLAlchemy
+- HTTPX
 
-### Security
+### Security Analysis
 
-- HTTP security analysis
-- Security headers
-- Cookie security
-- HTTPS configuration
+- HTTP security configuration analysis
+- Security headers and cookie attributes
+- HTTPS and redirect checks
+- Information disclosure detection
 - Risk assessment
 - Defensive security automation
 
@@ -131,7 +135,7 @@ Web Dashboard
 - CSS
 - JavaScript
 
-### DevOps & Testing
+### DevOps and Testing
 
 - Docker
 - Docker Compose
@@ -140,9 +144,15 @@ Web Dashboard
 
 ## Testing
 
-The project includes automated tests covering scanners, URL validation, HTTP handling, risk assessment, database persistence and the RAG assistant.
+The automated test suite covers security scanners, URL validation, HTTP handling, risk assessment, database persistence, knowledge retrieval, and the Security Assistant.
 
-**78 tests passed**
+**Last recorded result: 78 tests passed.**
+
+Run the test suite with:
+
+```bash
+python -m pytest -q
+```
 
 ## Project Structure
 
@@ -164,34 +174,50 @@ data/
 
 ## Running Locally
 
+### Requirements
+
+- Python 3.13 or a compatible version
+- PostgreSQL
+- An OpenAI API key for the Security Assistant
+
+Install the dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Configure the required environment variables in a local `.env` file, using `.env.example` as a template. Ensure PostgreSQL is running and `DATABASE_URL` points to the correct database. Set `OPENAI_API_KEY` to enable the Security Assistant.
+
+Start the application:
+
 ```bash
 python -m uvicorn app.main:app --reload
 ```
 
-Then open:
+Open the dashboard:
 
-```text
-http://127.0.0.1:8000
-```
+`http://127.0.0.1:8000`
 
 API documentation:
 
-```text
-http://127.0.0.1:8000/docs
-```
+`http://127.0.0.1:8000/docs`
 
 ## Docker
+
+Start the application and its configured services with:
 
 ```bash
 docker compose up --build
 ```
 
-## Scope
+Ensure the required environment variables are configured before starting the services.
 
-CyberSentinel is intended for **authorized defensive security assessments**.
+## Scope and Responsible Use
 
-It focuses on identifying and explaining security configuration weaknesses without performing exploitation or intrusive attacks.
+CyberSentinel is intended exclusively for authorized defensive security assessments. Only scan websites and applications that you own or have explicit permission to assess.
+
+The platform identifies and explains selected web security configuration weaknesses. It is not a full penetration testing framework and does not perform intrusive exploitation.
 
 ## Author
 
-**Laura**
+**Laura Riesco Martín**
